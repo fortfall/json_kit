@@ -4,7 +4,7 @@ from enum import Enum
 from json.encoder import (_make_iterencode, JSONEncoder,
                           encode_basestring_ascii, INFINITY,
                           c_make_encoder, encode_basestring)
-from json_encoders.utils import (is_elemental, is_collection,
+from json_tools.encoder.utils import (is_elemental, is_collection,
                     is_custom_class, hashable, to_hashable)
 from .RefJSONEncoder import RefJSONEncoder
 

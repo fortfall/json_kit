@@ -1,0 +1,13 @@
+{
+    "'utf-8' codec can't decode byte 0xff in position 0: invalid start byte": [
+        "/Users/fort/git/python_projects/json_load/tests/sample_json/1_info.json",
+        "/Users/fort/git/python_projects/json_load/tests/sample_json/2_info.json",
+        "/Users/fort/git/python_projects/json_load/tests/sample_json/3_info.json",
+        "/Users/fort/git/python_projects/json_load/tests/sample_json/4_info.json",
+        "/Users/fort/git/python_projects/json_load/tests/sample_json/5_info.json",
+        "/Users/fort/git/python_projects/json_load/tests/sample_json/6_info.json"
+    ],
+    "'utf-8' codec can't decode byte 0xb0 in position 180: invalid start byte": [
+        "/Users/fort/git/python_projects/json_load/tests/sample_json/7_info.dat"
+    ]
+}

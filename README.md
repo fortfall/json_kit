@@ -1,7 +1,7 @@
 ### Installation
 * from gitlab
 ```python
-pip install git+https://gitlab.hpcfun.com/scripts/json_encoders.git@master#egg=json_encoders
+pip install git+https://gitlab.hpcfun.com/scripts/json_tools.git@master#egg=json_tools
 ```
 * from setup.py
   download package and run setup.py
@@ -13,7 +13,7 @@ python setup.py install
 * Use SimpleJSONEncoder to deserialize Enum and customized class
 ```python
 from enum import Enum
-from json_encoders import SimpleJSONEncoder
+from json_tools import SimpleJSONEncoder
 class Job(Enum):
     Teacher = 0
     Engineer = 1
@@ -41,7 +41,7 @@ with open(json_path, 'w') as fp:
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are not preserved
 ```python
-from json_encoders import RefJSONEncoder, is_custom_class, hashable, to_hashable
+from json_tools import RefJSONEncoder, is_custom_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended;
 # and don't impl both __hash__ and __eq__ for classes 
@@ -77,7 +77,7 @@ with open(json_path, 'w') as fp:
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are preserved
 ```python
-from json_encoders import RefJSONEncoder, is_custom_class, hashable, to_hashable
+from json_tools import RefJSONEncoder, is_custom_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended
 class Person:

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 from importlib.util import  module_from_spec, spec_from_file_location
-spec = spec_from_file_location("constants", "./json_encoders/_constants.py")
+spec = spec_from_file_location("constants", "./json_tools/_constants.py")
 constants = module_from_spec(spec)
 spec.loader.exec_module(constants)
 
@@ -11,7 +11,7 @@ __version__ = constants.__version__
 __license__ = constants.__license__
 
 setup(
-    name='json_encoders',
+    name='json_tools',
     packages=find_packages(
         exclude=['*.tests', '*.test_.*', 'tests', 'develop']
     ),
