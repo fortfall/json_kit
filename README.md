@@ -1,3 +1,12 @@
+### Installation
+* with git
+```python
+pip install git+https://gitlab.hpcfun.com/scripts/json_encoders.git@master#egg=json_encoders
+```
+* without git
+```python
+pip install --upgrade https://gitlab.hpcfun.com/scripts/json_encoders/tarball/master
+```
 ### Usage
 * Use EasyJSONEncoder to deserialize Enum and customized class
 ```python
