@@ -71,7 +71,7 @@ jacks = [jack, another_jack]
 with open(json_path, 'w') as fp:
     json.dump(jacks, fp, cls=RefJSONEncoder)
 # output string:
-# [{"$id": "1", "$values": ["Swimming", "Video Games", "Fishing"]}, {"$ref": "1"}]
+# [{"$id": "1", "name": "Jack", "age": 33, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}, {"$ref": "1"}]
 ```
 * Use AllRefJSONEncoder to deserialize and preserve references of customized class, list(set/tuple), dict
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
