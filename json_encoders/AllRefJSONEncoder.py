@@ -4,8 +4,9 @@ from enum import Enum
 from json.encoder import (_make_iterencode, JSONEncoder,
                           encode_basestring_ascii, INFINITY,
                           c_make_encoder, encode_basestring)
-from .utils import (is_elemental, is_collection,
-                    is_custom_class, hashable)
+from json_encoders.utils import (is_elemental, is_collection,
+                    is_custom_class, hashable, to_hashable)
+from .RefJSONEncoder import RefJSONEncoder
 
 class AllRefJSONEncoder(RefJSONEncoder):
     def _count_ref(self, obj):
@@ -13,13 +14,13 @@ class AllRefJSONEncoder(RefJSONEncoder):
             return
         if is_collection(obj):
             if isinstance(obj, (list, tuple, set)):
-                k = AllRefJSONEncoder.to_hashable(obj)
+                k = to_hashable(obj)
                 if k in self.vec_ref_cnt:
                     self.vec_ref_cnt[k] += 1
                 else:
                     self.vec_ref_cnt[k] = 1
             elif isinstance(obj, dict):
-                k = AllRefJSONEncoder.to_hashable(obj)
+                k = to_hashable(obj)
                 if k in self.dict_ref_cnt:
                     self.dict_ref_cnt[k] += 1
                 else:
@@ -33,36 +34,6 @@ class AllRefJSONEncoder(RefJSONEncoder):
             for name, value in obj.__dict__.items():
                 self._count_ref(value)
     
-    @staticmethod
-    def to_hashable(obj):
-        if isinstance(obj, (list, tuple)):
-            return AllRefJSONEncoder.list_to_hashable(obj)
-        elif isinstance(obj, dict):
-            return AllRefJSONEncoder.dict_to_hashable(obj)
-        elif isinstance(obj, set):
-            return AllRefJSONEncoder.set_to_hashable(obj)
-        else:
-            raise TypeError(f"Can't make {type(obj)} hashable")
-    
-    @staticmethod
-    def set_to_hashable(obj):
-        converted = list(obj)
-        converted.sort(key=lambda x: id(x))
-        return AllRefJSONEncoder.list_to_hashable(converted)
-
-    @staticmethod
-    def list_to_hashable(obj):
-        return tuple(item if hashable(item) else id(item) for item in obj)
-
-    @staticmethod
-    def dict_to_hashable(obj):
-        converted = [(k, v) for k, v in obj.items()]
-        converted.sort(key=lambda x: id(x[0]))
-        keys = tuple(x[0] if hashable(x[0]) else id(x[0]) for x in converted)
-        values = tuple(x[1] if hashable(x[1]) else id(x[1]) for x in converted)
-        return (keys, values)
-        
-
     def _prepare(self, obj):
         self.vec_ref_cnt = {}
         self.vec_ref_serialized = {}
@@ -158,7 +129,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
             _indent = ' ' * _indent
         
         def _iterencode_list_ref(lst, _current_indent_level):
-            k = AllRefJSONEncoder.to_hashable(lst)
+            k = to_hashable(lst)
             if k not in self.vec_ref_cnt or self.vec_ref_cnt[k] <= 1:
                 yield from _iterencode_list(lst, _current_indent_level)
             elif k in self.vec_ref_serialized:
@@ -176,7 +147,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
                 raise Exception("Unhandled obj in _iterencode_list_ref")
         
         def _iterencode_dict_ref(dct, _current_indent_level):
-            k = AllRefJSONEncoder.to_hashable(dct)
+            k = to_hashable(dct)
             if k not in self.dict_ref_cnt or self.dict_ref_cnt[k] <= 1:
                 yield from _iterencode_dict(dct, _current_indent_level)
             elif k in self.dict_ref_serialized:
