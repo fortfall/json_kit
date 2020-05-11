@@ -10,7 +10,7 @@ cd $package_dir
 python setup.py install
 ```
 ### Usage
-* Use SimpleJSONEncoder to deserialize Enum and customized class
+#### Use SimpleJSONEncoder to deserialize Enum and customized class
 ```python
 from enum import Enum
 from json_tools import SimpleJSONEncoder
@@ -37,7 +37,7 @@ with open(json_path, 'w') as fp:
 # {"name": "Jack", "age": 33, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}
 ```
 
-* Use RefJSONEncoder to deserialize and preserve customized class reference
+#### Use RefJSONEncoder to deserialize and preserve customized class reference
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are not preserved
 ```python
@@ -73,7 +73,7 @@ with open(json_path, 'w') as fp:
 # output string:
 # [{"$id": "1", "name": "Jack", "age": 33, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}, {"$ref": "1"}]
 ```
-* Use AllRefJSONEncoder to deserialize and preserve references of customized class, list(set/tuple), dict
+#### Use AllRefJSONEncoder to deserialize and preserve references of customized class, list(set/tuple), dict
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are preserved
 ```python
@@ -107,4 +107,11 @@ with open(json_path, 'w') as fp:
     json.dump(persons, fp, cls=AllRefJSONEncoder)
 # output text:
 # [{"$id": "1", "$values": {"name": "Jack", "age": 33, "job": 0, "hobbies": {"$id": "2", "$values": ["Swimming", "Video Games", "Fishing"]}}}, {"$ref": "1"}, {"name": "Mike", "age": 24, "job": 2, "hobbies": {"$ref": "2"}}]
+```
+
+#### Use load_json_file for auto encoding detection
+```python
+from json_tools import load_json_file
+filename = "./sample.json"
+obj = load_json_file(filename)
 ```
