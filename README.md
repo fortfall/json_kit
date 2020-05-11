@@ -1,17 +1,19 @@
 ### Installation
-* with git
+* from gitlab
 ```python
 pip install git+https://gitlab.hpcfun.com/scripts/json_encoders.git@master#egg=json_encoders
 ```
-* without git
+* from setup.py
+  download package and run setup.py
 ```python
-pip install --upgrade https://gitlab.hpcfun.com/scripts/json_encoders/tarball/master
+cd $package_dir
+python setup.py install
 ```
 ### Usage
-* Use EasyJSONEncoder to deserialize Enum and customized class
+* Use SimpleJSONEncoder to deserialize Enum and customized class
 ```python
 from enum import Enum
-from json_encoders import EasyJSONEncoder
+from json_encoders import SimpleJSONEncoder
 class Job(Enum):
     Teacher = 0
     Engineer = 1
@@ -29,7 +31,7 @@ class Person:
 
 jack = Person('Jack', 33, Job.Teacher)
 with open(json_path, 'w') as fp:
-    json.dump(jack, fp, cls=EasyJSONEncoder)
+    json.dump(jack, fp, cls=SimpleJSONEncoder)
 
 # output string
 # {"name": "Jack", "age": 33, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}
