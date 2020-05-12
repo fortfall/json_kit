@@ -1,7 +1,7 @@
 import logging
 import pytest
 import json
-from json_tools.encoder import RefJSONEncoder
+from json_kit.encoder import RefJSONEncoder
 
 logger = logging.getLogger(__name__)
 

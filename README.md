@@ -1,7 +1,7 @@
 ### Installation
 * from gitlab
 ```python
-pip install git+https://gitlab.hpcfun.com/scripts/json_tools.git@master#egg=json_tools
+pip install git+https://github.com/fortfall/json_kit.git@master#egg=json_kit
 ```
 * from setup.py
   download package and run setup.py
@@ -13,7 +13,7 @@ python setup.py install
 #### Use SimpleJSONEncoder to serialize Enum and customized class
 ```python
 from enum import Enum
-from json_tools import SimpleJSONEncoder
+from json_kit import SimpleJSONEncoder
 class Job(Enum):
     Teacher = 0
     Engineer = 1
@@ -41,7 +41,7 @@ with open(json_path, 'w') as fp:
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are not preserved
 ```python
-from json_tools import RefJSONEncoder, is_customized_class, hashable, to_hashable
+from json_kit import RefJSONEncoder, is_customized_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended;
 # and don't impl both __hash__ and __eq__ for classes 
@@ -78,7 +78,7 @@ with open(json_path, 'w') as fp:
   * built-in collecionts such list/dict/set/tuple's references are preserved (set/tuple are converted into lists).
   * use IList/IDictionary instead of IReadOnlyList/IReadOnlyDictionary in C#, otherwise Json.net won't be able to presever builtin collection reference when deserializing.
 ```python
-from json_tools import RefJSONEncoder, is_customized_class, hashable, to_hashable
+from json_kit import RefJSONEncoder, is_customized_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended
 class Person:
@@ -127,7 +127,7 @@ jstr = json.dumps(obj, cls=SimpleJSONEncoder)
 
 #### Use load_json_file for auto encoding detection
 ```python
-from json_tools import load_json_file
+from json_kit import load_json_file
 filename = "./sample.json"
 obj = load_json_file(filename)
 ```

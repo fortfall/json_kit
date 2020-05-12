@@ -1,6 +1,6 @@
 from enum import Enum
 import pytest
-from json_tools.encoder import (is_customized_class, hashable, to_hashable)
+from json_kit.encoder import (is_customized_class, hashable, to_hashable)
 
 
 class Job(Enum):
