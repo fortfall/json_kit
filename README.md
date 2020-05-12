@@ -1,4 +1,8 @@
 ### Installation
+* from python package index
+```python
+pip install json_kit
+```
 * from git
 ```python
 pip install git+https://gitlab.hpcfun.com/scripts/json_kit.git@master#egg=json_kit
