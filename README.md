@@ -106,7 +106,7 @@ persons = [jack, another_jack, mike]
 with open(json_path, 'w') as fp:
     json.dump(persons, fp, cls=AllRefJSONEncoder)
 # output text:
-# [{"$id": "1", "$values": {"name": "Jack", "age": 33, "job": 0, "hobbies": {"$id": "2", "$values": ["Swimming", "Video Games", "Fishing"]}}}, {"$ref": "1"}, {"name": "Mike", "age": 24, "job": 2, "hobbies": {"$ref": "2"}}]
+# [{"$id": "1", "name": "Jack", "age": 33, "job": 0, "hobbies": {"$id": "2", "$values": ["Swimming", "Video Games", "Fishing"]}}, {"$ref": "1"}, {"name": "Mike", "age": 24, "job": 2, "hobbies": {"$ref": "2"}}]
 ```
 
 #### Use load_json_file for auto encoding detection
