@@ -10,7 +10,7 @@ cd $package_dir
 python setup.py install
 ```
 ### Usage
-#### Use SimpleJSONEncoder to deserialize Enum and customized class
+#### Use SimpleJSONEncoder to serialize Enum and customized class
 ```python
 from enum import Enum
 from json_tools import SimpleJSONEncoder
@@ -37,7 +37,7 @@ with open(json_path, 'w') as fp:
 # {"name": "Jack", "age": 33, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}
 ```
 
-#### Use RefJSONEncoder to deserialize and preserve customized class reference
+#### Use RefJSONEncoder to serialize and preserve customized class reference
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are not preserved
 ```python
@@ -73,10 +73,11 @@ with open(json_path, 'w') as fp:
 # output string:
 # [{"$id": "1", "name": "Jack", "age": 33, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}, {"$ref": "1"}]
 ```
-#### Use AllRefJSONEncoder to deserialize and preserve references of customized class, list(set/tuple), dict
+#### Use AllRefJSONEncoder to serialize and preserve references of customized class, list(set/tuple), dict
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
-  * built-in collecionts such list/dict/set/tuple's references are preserved
-```python
+  * built-in collecionts such list/dict/set/tuple's references are preserved (set/tuple are converted into lists).
+  * use IList/IDictionary instead of IReadOnlyList/IReadOnlyDictionary in C#, otherwise Json.net won't be able to presever builtin collection reference when deserializing.
+  
 from json_tools import RefJSONEncoder, is_custom_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended
