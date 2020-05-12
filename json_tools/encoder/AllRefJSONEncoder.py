@@ -165,7 +165,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
         
         def _iterencode_cls_ref(cls, _current_indent_level):
             if not hashable(cls) or cls not in self.cls_ref_cnt or self.cls_ref_cnt[cls] <= 1:
-                converted = {k: v for k, v in cls.__dict__.items() if v is not None}
+                converted = {k: v for k, v in cls.__dict__.items() if not AllRefJSONEncoder.skip_none_fields or v is not None}
                 yield from _iterencode_dict(converted, _current_indent_level)
             elif cls in self.cls_ref_serialized:
                 converted = { "$ref": str(self.cls_ref_serialized[cls]) }
@@ -175,8 +175,11 @@ class AllRefJSONEncoder(RefJSONEncoder):
                 self.cls_ref_serialized[cls] = self.ref_id
                 converted = OrderedDict()
                 converted["$id"] = str(self.ref_id)
-                converted["$values"] = {k: v for k, v in cls.__dict__.items() if v is not None}
-                yield from _iterencode_dict(converted, _current_indent_level, reduce_level=True)
+                for k, v in cls.__dict__.items():
+                    if AllRefJSONEncoder.skip_none_fields and v is None:
+                        continue
+                    converted[k] = v
+                yield from _iterencode_dict(converted, _current_indent_level)
             else:
                 raise Exception("Unhandled custom class obj in _iterencode_cls_ref")
 

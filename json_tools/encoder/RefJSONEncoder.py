@@ -5,6 +5,7 @@ from .utils import (is_elemental, is_collection,
                     is_custom_class, hashable)
 
 class RefJSONEncoder(json.JSONEncoder):
+    skip_none_fields = True
     def _count_ref(self, obj):
         if is_elemental(obj):
             return
@@ -52,7 +53,7 @@ class RefJSONEncoder(json.JSONEncoder):
     
     def _process_custom_cls(self, obj):
         if not hashable(obj) or obj not in self.cls_ref_cnt or self.cls_ref_cnt[obj] <= 1:
-            return {k: v for k, v in obj.__dict__.items() if v is not None}
+            return {k: v for k, v in obj.__dict__.items() if not RefJSONEncoder.skip_none_fields or v is not None}
         elif obj in self.cls_ref_serialized:
             return {
                 "$ref": str(self.cls_ref_serialized[obj])
@@ -63,7 +64,7 @@ class RefJSONEncoder(json.JSONEncoder):
             out = OrderedDict()
             out["$id"] = str(self.ref_id)
             for k, v in obj.__dict__.items():
-                if v is None:
+                if RefJSONEncoder.skip_none_fields and v is None:
                     continue
                 out[k] = v
             return out
