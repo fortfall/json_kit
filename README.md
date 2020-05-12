@@ -1,7 +1,7 @@
 ### Installation
 * from git
 ```python
-pip install git+https://github.com/fortfall/json_kit.git@master#egg=json_kit
+pip install git+https://gitlab.hpcfun.com/scripts/json_kit.git@master#egg=json_kit
 ```
 * from setup.py
   download package and run setup.py
