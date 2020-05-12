@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 from importlib.util import  module_from_spec, spec_from_file_location
-spec = spec_from_file_location("constants", "./jsont_kit/_constants.py")
+spec = spec_from_file_location("constants", "./json_kit/_constants.py")
 constants = module_from_spec(spec)
 spec.loader.exec_module(constants)
 
