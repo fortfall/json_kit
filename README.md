@@ -77,7 +77,7 @@ with open(json_path, 'w') as fp:
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are preserved (set/tuple are converted into lists).
   * use IList/IDictionary instead of IReadOnlyList/IReadOnlyDictionary in C#, otherwise Json.net won't be able to presever builtin collection reference when deserializing.
-  
+```python
 from json_tools import RefJSONEncoder, is_custom_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended
@@ -89,7 +89,7 @@ class Person:
         self.hobbies = hobbies
     
     def __hash__(self):
-        data = [(k, v) if hashable(v) else (k, id(v)) for k, v in self.__dict__.items()]
+        data = [(k, v) if hashable(v) else (k, to_hashable(v)) for k, v in self.__dict__.items()]
         data.sort(key=lambda x: x[0])
         data = tuple(data)
         return hash(data)
@@ -108,6 +108,21 @@ with open(json_path, 'w') as fp:
     json.dump(persons, fp, cls=AllRefJSONEncoder)
 # output text:
 # [{"$id": "1", "name": "Jack", "age": 33, "job": 0, "hobbies": {"$id": "2", "$values": ["Swimming", "Video Games", "Fishing"]}}, {"$ref": "1"}, {"name": "Mike", "age": 24, "job": 2, "hobbies": {"$ref": "2"}}]
+```
+#### Disable skip_none_fields to preserve null fields
+```python
+# Note
+# None fields in cusomized classes are skipped in default.
+# Set Encoder.skip_none_fields = False to preserve none fields.
+person = Person('Jack', Job.Teacher, hobbies)
+person.age = None
+jstr = json.dumps(obj, cls=SimpleJSONEncoder)
+# output string
+# {"name": "Jack", "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}
+SimpleJSONEncoder.skip_none_fieds = False
+jstr = json.dumps(obj, cls=SimpleJSONEncoder)
+# output string
+# {"name": "Jack", "age": null, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}
 ```
 
 #### Use load_json_file for auto encoding detection

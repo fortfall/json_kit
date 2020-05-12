@@ -89,3 +89,8 @@ def person_list(person, another_person):
 @pytest.fixture()
 def persons_with_same_hobbies(person, another_person, person_with_same_hobbies):
     return [person, another_person, person_with_same_hobbies]
+
+@pytest.fixture
+def person_with_none_fields(person):
+    person.age = None
+    return person
