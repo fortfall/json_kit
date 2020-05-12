@@ -5,7 +5,7 @@ from json.encoder import (_make_iterencode, JSONEncoder,
                           encode_basestring_ascii, INFINITY,
                           c_make_encoder, encode_basestring)
 from json_tools.encoder.utils import (is_elemental, is_collection,
-                    is_custom_class, hashable, to_hashable)
+                    is_customized_class, hashable, to_hashable)
 from .RefJSONEncoder import RefJSONEncoder
 
 class AllRefJSONEncoder(RefJSONEncoder):
@@ -26,7 +26,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
                 else:
                     self.dict_ref_cnt[k] = 1
             self._count_ref_in_collection(obj)
-        elif is_custom_class(obj) and hashable(obj):
+        elif is_customized_class(obj) and hashable(obj):
             if obj in self.cls_ref_cnt:
                 self.cls_ref_cnt[obj] += 1
             else:
@@ -48,7 +48,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
             return converted
         elif isinstance(obj, Enum):
             return obj.value
-        # elif is_custom_class(obj):
+        # elif is_customized_class(obj):
         #     return self._process_custom_cls(obj)
         return obj
 
@@ -344,7 +344,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
                     if markerid in markers:
                         raise ValueError("Circular reference detected")
                     markers[markerid] = o
-                if is_custom_class(o):
+                if is_customized_class(o):
                     yield from _iterencode_cls_ref(o, _current_indent_level)
                 else:
                     o = _default(o)

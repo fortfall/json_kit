@@ -7,7 +7,7 @@ def is_elemental(obj):
 def is_collection(obj):
     return isinstance(obj, (list, dict, tuple, set))
 
-def is_custom_class(obj):
+def is_customized_class(obj):
     return not isinstance(obj, (int, float, Enum, list, dict, tuple, set)) and hasattr(obj, "__dict__")
 
 def hashable(obj):

@@ -41,7 +41,7 @@ with open(json_path, 'w') as fp:
   * implement \_\_hash\_\_ and \_\_eq\_\_ for class to preserve its references
   * built-in collecionts such list/dict/set/tuple's references are not preserved
 ```python
-from json_tools import RefJSONEncoder, is_custom_class, hashable, to_hashable
+from json_tools import RefJSONEncoder, is_customized_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended;
 # and don't impl both __hash__ and __eq__ for classes 
@@ -60,7 +60,7 @@ class Person:
         return hash(data)
     
     def __eq__(self, other):
-        if not is_custom_class(other) or not hashable(other):
+        if not is_customized_class(other) or not hashable(other):
             return False
         return self.__class__ == other.__class__ and self.__hash__() == other.__hash__()
         
@@ -78,7 +78,7 @@ with open(json_path, 'w') as fp:
   * built-in collecionts such list/dict/set/tuple's references are preserved (set/tuple are converted into lists).
   * use IList/IDictionary instead of IReadOnlyList/IReadOnlyDictionary in C#, otherwise Json.net won't be able to presever builtin collection reference when deserializing.
 ```python
-from json_tools import RefJSONEncoder, is_custom_class, hashable, to_hashable
+from json_tools import RefJSONEncoder, is_customized_class, hashable, to_hashable
 # Should implement __hash__ and __eq__ for certain custom class
 # if its reference keeping is intended
 class Person:
@@ -95,7 +95,7 @@ class Person:
         return hash(data)
     
     def __eq__(self, other):
-        if not is_custom_class(other) or not hashable(other):
+        if not is_customized_class(other) or not hashable(other):
             return False
         return self.__class__ == other.__class__ and self.__hash__() == other.__hash__()
 

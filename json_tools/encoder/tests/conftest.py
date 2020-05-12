@@ -1,6 +1,6 @@
 from enum import Enum
 import pytest
-from json_tools.encoder import (is_custom_class, hashable, to_hashable)
+from json_tools.encoder import (is_customized_class, hashable, to_hashable)
 
 
 class Job(Enum):
@@ -23,7 +23,7 @@ class Person:
         return hash(data)
     
     def __eq__(self, other):
-        if not is_custom_class(other) or not hashable(other):
+        if not is_customized_class(other) or not hashable(other):
             return False
         return self.__class__ == other.__class__ and self.__hash__() == other.__hash__()
 

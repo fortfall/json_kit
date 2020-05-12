@@ -2,7 +2,7 @@ import json
 from collections import OrderedDict
 from enum import Enum
 from .utils import (is_elemental, is_collection, 
-                    is_custom_class, hashable)
+                    is_customized_class, hashable)
 
 class RefJSONEncoder(json.JSONEncoder):
     skip_none_fields = True
@@ -11,7 +11,7 @@ class RefJSONEncoder(json.JSONEncoder):
             return
         elif is_collection(obj):
             self._count_ref_in_collection(obj)
-        elif is_custom_class(obj) and hashable(obj):
+        elif is_customized_class(obj) and hashable(obj):
             if obj in self.cls_ref_cnt:
                 self.cls_ref_cnt[obj] += 1
             else:
@@ -47,7 +47,7 @@ class RefJSONEncoder(json.JSONEncoder):
             return list(obj)
         elif isinstance(obj, Enum):
             return obj.value
-        elif is_custom_class(obj):
+        elif is_customized_class(obj):
             return self._process_custom_cls(obj)
         return obj
     
