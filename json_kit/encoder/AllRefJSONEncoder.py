@@ -13,7 +13,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
         if is_elemental(obj):
             return
         if is_collection(obj):
-            if isinstance(obj, (list, tuple, set)):
+            if isinstance(obj, (list, tuple, set, frozenset)):
                 k = to_hashable(obj)
                 if k in self.vec_ref_cnt:
                     self.vec_ref_cnt[k] += 1
@@ -31,8 +31,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
                 self.cls_ref_cnt[obj] += 1
             else:
                 self.cls_ref_cnt[obj] = 1
-            for name, value in obj.__dict__.items():
-                self._count_ref(value)
+            self._count_ref_in_cls(obj)
     
     def _prepare(self, obj):
         self.vec_ref_cnt = {}
@@ -165,7 +164,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
         
         def _iterencode_cls_ref(cls, _current_indent_level):
             if not hashable(cls) or cls not in self.cls_ref_cnt or self.cls_ref_cnt[cls] <= 1:
-                converted = {k: v for k, v in cls.__dict__.items() if not AllRefJSONEncoder.skip_none_fields or v is not None}
+                converted = self._cls_to_dict(cls, AllRefJSONEncoder.skip_none_fields)
                 yield from _iterencode_dict(converted, _current_indent_level)
             elif cls in self.cls_ref_serialized:
                 converted = { "$ref": str(self.cls_ref_serialized[cls]) }
@@ -175,10 +174,7 @@ class AllRefJSONEncoder(RefJSONEncoder):
                 self.cls_ref_serialized[cls] = self.ref_id
                 converted = OrderedDict()
                 converted["$id"] = str(self.ref_id)
-                for k, v in cls.__dict__.items():
-                    if AllRefJSONEncoder.skip_none_fields and v is None:
-                        continue
-                    converted[k] = v
+                converted = self._cls_to_dict(cls, AllRefJSONEncoder.skip_none_fields, converted)
                 yield from _iterencode_dict(converted, _current_indent_level)
             else:
                 raise Exception("Unhandled custom class obj in _iterencode_cls_ref")

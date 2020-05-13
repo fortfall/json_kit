@@ -1,11 +1,11 @@
 import json
 from collections import OrderedDict
 from enum import Enum
+from .SimpleJSONEncoder import SimpleJSONEncoder
 from .utils import (is_elemental, is_collection, 
                     is_customized_class, hashable)
 
-class RefJSONEncoder(json.JSONEncoder):
-    skip_none_fields = True
+class RefJSONEncoder(SimpleJSONEncoder):
     def _count_ref(self, obj):
         if is_elemental(obj):
             return
@@ -16,18 +16,25 @@ class RefJSONEncoder(json.JSONEncoder):
                 self.cls_ref_cnt[obj] += 1
             else:
                 self.cls_ref_cnt[obj] = 1
-            for name, value in obj.__dict__.items():
-                self._count_ref(value)
+            self._count_ref_in_cls(obj)
 
     def _count_ref_in_collection(self, obj):
         if len(obj) == 0:
             return
-        if isinstance(obj, (list, tuple, set)):
+        if isinstance(obj, (list, tuple, set, frozenset)):
             for item in obj:
                 self._count_ref(item)
         elif isinstance(obj, (dict)):
             for k, v in obj.items():
                 self._count_ref(v)
+    
+    def _count_ref_in_cls(self, obj):
+        if hasattr(obj, '__dict__'):
+            for name, value in obj.__dict__.items():
+                self._count_ref(value)
+        elif hasattr(obj, '__slots__'):
+            for x in obj.__slots__:
+                self._count_ref(getattr(obj, x))
 
     def _prepare(self, o):
         self.cls_ref_cnt = {}  # ref: count
@@ -53,7 +60,7 @@ class RefJSONEncoder(json.JSONEncoder):
     
     def _process_custom_cls(self, obj):
         if not hashable(obj) or obj not in self.cls_ref_cnt or self.cls_ref_cnt[obj] <= 1:
-            return {k: v for k, v in obj.__dict__.items() if not RefJSONEncoder.skip_none_fields or v is not None}
+            return self._cls_to_dict(obj, RefJSONEncoder.skip_none_fields)
         elif obj in self.cls_ref_serialized:
             return {
                 "$ref": str(self.cls_ref_serialized[obj])
@@ -63,10 +70,7 @@ class RefJSONEncoder(json.JSONEncoder):
             self.cls_ref_serialized[obj] = self.ref_id
             out = OrderedDict()
             out["$id"] = str(self.ref_id)
-            for k, v in obj.__dict__.items():
-                if RefJSONEncoder.skip_none_fields and v is None:
-                    continue
-                out[k] = v
+            return self._cls_to_dict(obj, RefJSONEncoder.skip_none_fields, out)
             return out
         else:
             raise Exception("Unhandled custom class obj in _process_custom_cls")
