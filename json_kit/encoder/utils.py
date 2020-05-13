@@ -2,13 +2,17 @@ from enum import Enum
 
 
 def is_elemental(obj):
-    return isinstance(obj, (int, float, Enum))
+    return isinstance(obj, (int, float, Enum, bool))
 
 def is_collection(obj):
     return isinstance(obj, (list, dict, tuple, set))
 
 def is_customized_class(obj):
-    return not isinstance(obj, (int, float, Enum, list, dict, tuple, set)) and hasattr(obj, "__dict__")
+    if is_elemental(obj) or is_collection(obj):
+        return False
+    if hasattr(obj, '__dict__') and obj.__module__ != 'builtins':
+        return True
+    return False
 
 def hashable(obj):
     try:
