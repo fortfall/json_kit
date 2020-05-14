@@ -129,6 +129,32 @@ jstr = json.dumps(obj, cls=SimpleJSONEncoder)
 # {"name": "Jack", "age": null, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}
 ```
 
+### Use serialize_only_annotated to serialize only annotated fields
+* To serialize only part of instance fields, annotate those to be serialize on class level
+* If no annotation exists on class level, all instance fields will be serialized
+```python
+from typing import List
+from json_kit import SimpleJSONEncoder
+class Person:
+    name: str
+    age: int
+    job: Job
+    hobbies: List[str]
+    def __init__(self, name, age, job, hobbies, address):
+        self.name = name
+        self.age = age
+        self.job = job
+        self.hobbies = hobbies
+        self.address = address
+
+person = Person('Jack', 33, Job.Teacher, hobbies, 'Chengdu')
+SimpleJSONEncoder.serialize_only_annotated = True
+jstr = json.dumps(person, cls=SimpleJSONEncoder)
+# output string
+# {"name": "Jack", "age": 33, "job": 0, "hobbies": ["Swimming", "Video Games", "Fishing"]}
+# if no annotation is provided, then all fields will be serialized, including 'address' field.
+```
+
 #### Use load_json_file for auto encoding detection
 ```python
 from json_kit import load_json_file

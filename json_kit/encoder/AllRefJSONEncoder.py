@@ -4,7 +4,7 @@ from enum import Enum
 from json.encoder import (_make_iterencode, JSONEncoder,
                           encode_basestring_ascii, INFINITY,
                           c_make_encoder, encode_basestring)
-from json_kit.encoder.utils import (is_elemental, is_collection,
+from .utils import (is_elemental, is_collection,
                     is_customized_class, hashable, to_hashable)
 from .RefJSONEncoder import RefJSONEncoder
 
@@ -48,7 +48,6 @@ class AllRefJSONEncoder(RefJSONEncoder):
         elif isinstance(obj, Enum):
             return obj.value
         # elif is_customized_class(obj):
-        #     return self._process_custom_cls(obj)
         return obj
 
     def iterencode(self, o, _one_shot=False):
@@ -164,7 +163,8 @@ class AllRefJSONEncoder(RefJSONEncoder):
         
         def _iterencode_cls_ref(cls, _current_indent_level):
             if not hashable(cls) or cls not in self.cls_ref_cnt or self.cls_ref_cnt[cls] <= 1:
-                converted = self._cls_to_dict(cls, AllRefJSONEncoder.skip_none_fields)
+                converted = self._cls_to_dict(cls, skip_none_fields=AllRefJSONEncoder.skip_none_fields,
+                                serialize_only_annotated=AllRefJSONEncoder.serialize_only_annotated)
                 yield from _iterencode_dict(converted, _current_indent_level)
             elif cls in self.cls_ref_serialized:
                 converted = { "$ref": str(self.cls_ref_serialized[cls]) }
@@ -174,7 +174,8 @@ class AllRefJSONEncoder(RefJSONEncoder):
                 self.cls_ref_serialized[cls] = self.ref_id
                 converted = OrderedDict()
                 converted["$id"] = str(self.ref_id)
-                converted = self._cls_to_dict(cls, AllRefJSONEncoder.skip_none_fields, converted)
+                converted = self._cls_to_dict(cls, skip_none_fields=AllRefJSONEncoder.skip_none_fields, 
+                                serialize_only_annotated=AllRefJSONEncoder.serialize_only_annotated, dct=converted)
                 yield from _iterencode_dict(converted, _current_indent_level)
             else:
                 raise Exception("Unhandled custom class obj in _iterencode_cls_ref")

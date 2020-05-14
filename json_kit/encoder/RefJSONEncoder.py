@@ -55,12 +55,13 @@ class RefJSONEncoder(SimpleJSONEncoder):
         elif isinstance(obj, Enum):
             return obj.value
         elif is_customized_class(obj):
-            return self._process_custom_cls(obj)
+            return self._process_customized_cls(obj)
         return obj
     
-    def _process_custom_cls(self, obj):
+    def _process_customized_cls(self, obj):
         if not hashable(obj) or obj not in self.cls_ref_cnt or self.cls_ref_cnt[obj] <= 1:
-            return self._cls_to_dict(obj, RefJSONEncoder.skip_none_fields)
+            return self._cls_to_dict(obj, skip_none_fields=RefJSONEncoder.skip_none_fields,
+                    serialize_only_annotated=RefJSONEncoder.skip_none_fields)
         elif obj in self.cls_ref_serialized:
             return {
                 "$ref": str(self.cls_ref_serialized[obj])
@@ -70,7 +71,8 @@ class RefJSONEncoder(SimpleJSONEncoder):
             self.cls_ref_serialized[obj] = self.ref_id
             out = OrderedDict()
             out["$id"] = str(self.ref_id)
-            return self._cls_to_dict(obj, RefJSONEncoder.skip_none_fields, out)
+            return self._cls_to_dict(obj, skip_none_fields=RefJSONEncoder.skip_none_fields, 
+                        serialize_only_annotated=RefJSONEncoder.serialize_only_annotated, dct=out)
             return out
         else:
-            raise Exception("Unhandled custom class obj in _process_custom_cls")
+            raise Exception("Unhandled custom class obj in _process_customized_cls")
