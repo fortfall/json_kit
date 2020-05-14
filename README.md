@@ -3,14 +3,8 @@
 ```python
 pip install json_kit
 ```
-* from git
+* download package and run setup.py
 ```python
-pip install git+https://gitlab.hpcfun.com/scripts/json_kit.git@master#egg=json_kit
-```
-* from setup.py
-  download package and run setup.py
-```python
-cd $package_dir
 python setup.py install
 ```
 ### Usage
