@@ -5,6 +5,6 @@ def test_load_json_file(sample_jsons):
     for f in sample_jsons:
         try:
             obj = load_json_file(f)
-            assert True
+            assert obj is not None
         except:
-            assert False
+            assert obj is not None

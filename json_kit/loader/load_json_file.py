@@ -17,7 +17,7 @@ def load_json_file(filename: str) -> object:
     elif not os.path.exists(filename):
         raise Exception(f"{filename} not exists.")
     try:
-        with open(filename, 'utf-8') as fp:
+        with open(filename, 'r', encoding='utf-8') as fp:
             return json.load(fp)
     except UnicodeDecodeError as e:
         detected_encoding = detected_encoding(filename)
