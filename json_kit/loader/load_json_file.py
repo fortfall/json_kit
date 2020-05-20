@@ -20,9 +20,9 @@ def load_json_file(filename: str) -> object:
         with open(filename, 'r', encoding='utf-8') as fp:
             return json.load(fp)
     except UnicodeDecodeError as e:
-        detected_encoding = detected_encoding(filename)
-        if detected_encoding is None:
+        encoding = detect_encoding(filename)
+        if encoding is None:
             raise Exception(f"Unable to load {filename}.\n Error: {str(e)}")
         else:
-            with open(filename, 'r', encoding=detected_encoding) as fp:
+            with open(filename, 'r', encoding=encoding) as fp:
                 return json.load(fp)
