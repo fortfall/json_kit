@@ -1,7 +1,8 @@
 import os
 import json
+from pathlib import Path
+from typing import Union
 from chardet import detect
-from .utils import is_pathname_valid
 
 def detect_encoding(filename):
     with open(filename, 'rb') as fp:
@@ -11,11 +12,7 @@ def detect_encoding(filename):
         except:
             return None
 
-def load_json_file(filename: str) -> object:
-    if not is_pathname_valid(filename):
-        raise Exception(f"Invalid filename: {filename}")
-    elif not os.path.exists(filename):
-        raise Exception(f"{filename} not exists.")
+def load_json_file(filename: Union[str, Path]) -> object:
     try:
         with open(filename, 'r', encoding='utf-8') as fp:
             return json.load(fp)
